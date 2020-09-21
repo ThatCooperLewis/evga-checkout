@@ -1,6 +1,7 @@
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import WebDriverException
 from login import save_login_cookies
 import credit_card as cc
 from time import sleep
@@ -66,10 +67,24 @@ class EvgaBrowser:
                 sleep(2)
         return False
 
+    def website_is_down(self):
+        # Look for link unique to "We're sorry, website down" page
+        for _ in range(2):
+            try:
+                if self.browser.find_element_by_link_text('email our web team'): return True
+            except:
+                if debug: print('Login failed but error page is not detected...')
+        return False
+
     def load_product_page(self, product_number=None):
         if not product_number:
             product_number = self.product
-        self.browser.get('https://www.evga.com/products/product.aspx?pn=' + product_number)
+        try:
+            self.browser.get('https://www.evga.com/products/product.aspx?pn=' + product_number)
+        except WebDriverException:
+            # If website fails to load, try and try again
+            self.load_product_page()
+            return
 
     def wait_and_click_id(self, element_id: str, duration=1, ):
         # Loop until the UI element is found, then click it
@@ -170,6 +185,7 @@ def threaded_loop(sku, index, thread_queue, signal_queue):
         # If in-stock, submit browser class for checkout process, then wait for instance success signal
         evga.load_product_page()
         if not evga.verify_login():
+            if evga.website_is_down(): continue
             thread_queue.put('login')
             while True:
                 if signal_queue.qsize() > 0 and signal_queue.get():
@@ -233,7 +249,11 @@ def loop(sku: str):
     evga = EvgaBrowser(sku)
     while True:
         evga.load_product_page()
-        if not evga.verify_login(): break 
+        if not evga.verify_login():
+            if evga.website_is_down(): continue
+            print('ERROR: Cannot login. Running login script...')
+            save_login_cookies()
+            continue
         if evga.product_out_of_stock(): continue
         if evga.add_to_cart():
             evga.go_through_checkout()
