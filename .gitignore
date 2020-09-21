@@ -1,0 +1,9 @@
+# Dev environment
+venv
+__pycache__
+# Private information
+credit_card.py
+cookies.json
+# Debugging
+geckodriver.log
+status.txt
