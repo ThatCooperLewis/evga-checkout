@@ -7,3 +7,7 @@ cookies.json
 # Debugging
 geckodriver.log
 status.txt
+# Build outputs 
+dist
+build
+main.spec

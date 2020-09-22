@@ -1,14 +1,18 @@
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
-import json
 from time import sleep
+import platform
+import json
 
 def save_login_cookies():
     # Open new browser window to EVGA login
     # Wait for login sequence (return to homepage) then store cookies
     # Close window & quit once complete
     opts = Options()
-    browser = Firefox(options=opts)
+    if platform.system() == 'Windows':
+        browser = Firefox(options=opts, executable_path='geckodriver.exe')
+    else:
+        browser = Firefox(options=opts, executable_path='geckodriver')
     print('Please finish login sequence in browser window. It will close automatically.')
     browser.get('https://secure.evga.com/us/login.asp')
     while True:
@@ -20,8 +24,16 @@ def save_login_cookies():
     with open('cookies.json', 'w+') as file:
         json.dump(cookies, file)
         file.close()
-    print('User is cached. Continue onto main loop.')
+    print('User was successfully cached.')
     browser.close()
+    return cookies
+
+def get_login_cookies():
+    try:
+        with open('cookies.json', 'r') as file:
+            return json.load(file)
+    except:
+        return save_login_cookies()
 
 if __name__ == "__main__":
-    save_login_cookies()
+    _ = save_login_cookies()

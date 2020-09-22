@@ -83,9 +83,9 @@ Most macOS systems use Python 2 by default. If you're getting errors like `Pytho
 
 Your versions of Firefox and the WebEngine must be synced. If you get weird firefox/gecko/driver issues when launching the script, you likely don't have the right broswer/driver pair.
 
-If you're running the newest version of firefox, get the [most recent WebEngine here](https://github.com/mozilla/geckodriver/releases). Add the `geckodriver` file to `venv/bin/`.
+If you're running the newest version of firefox, get the [most recent WebEngine here](https://github.com/mozilla/geckodriver/releases). Add the `geckodriver` file to the script directory.
 
-On macOS there is an extra step. While in a terminal navigated to `venv/bin/`, run this command:
+On macOS there is an extra step. With a terminal in this script's directory, run this command:
 
         xattr -r -d com.apple.quarantine geckodriver
 

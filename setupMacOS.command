@@ -13,10 +13,9 @@ pip3 install -r requirements.txt
 
 
 
-echo "Move default geckodriver..."
+echo "Fix geckodriver..."
 
-mv geckodriver venv/bin
-xattr -r -d com.apple.quarantine venv/bin/geckodriver
+xattr -r -d com.apple.quarantine geckodriver
 
 
 echo "Start login process..."
@@ -27,7 +26,7 @@ python3 login.py
 
 echo "Setup local configuration..."
 
-python3 setup_cc.py
+python3 payment_setup.py
 
 
 echo "It is safe to close this window. Open runMacOS.command to run bot."

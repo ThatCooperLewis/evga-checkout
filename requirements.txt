@@ -1,1 +1,3 @@
 selenium==3.141.0
+pyzipper==0.3.3
+pyinstaller==4.0
