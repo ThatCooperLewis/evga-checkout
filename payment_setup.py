@@ -22,7 +22,12 @@ class PaymentInfo:
         self.verification = payment_dict['verification'] # 4-digit front of Amex, 3-digit back of other cards
 
 def save_cc():
-    print('Please enter credit/debit card information. Data will be saved to a local file.')
+    print('--------------------------------------------------------------')
+    print('EVGA does not store payment methods, so this bot needs to store payment information in memory while running.')
+    print("Payment data will remain in this program's local folder, in an password-protected file.")
+    print("Next time you open this program, you will be asked for the file password only.")
+    print('Enter a credit/debit card.')
+    print('--------------------------------------------------------------')
 
     cc_name = input('Full name on card: ')
     cc_num = input('Credit Card # (no spaces, digits only): ')
@@ -59,11 +64,18 @@ def get_password_input(prompt: str, confirm=True):
 def get_payment_config():
     if os.path.isfile(zip_path):
         pw = get_password_input('Enter password to access payment information: ', False)
-        with pyzipper.AESZipFile(zip_path) as zf:
-            payment_str = zf.read('payment.json', pwd=pw)
-            zf.close()
-        payment_obj = json.loads(payment_str)
-        return payment_obj
+        try:
+            with pyzipper.AESZipFile(zip_path) as zf:
+                payment_str = zf.read('payment.json', pwd=pw)
+                zf.close()
+            payment_obj = json.loads(payment_str)
+            return payment_obj
+        except:
+            print('--------------------------------------------------------------')
+            print('Password incorrect or file corrupted.')
+            print('If this keeps happening, delete "/payment.zip" and restart bot.')
+            print('--------------------------------------------------------------')
+            return get_payment_config()
     else:
         return save_cc()
 
