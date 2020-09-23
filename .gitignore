@@ -1,6 +1,7 @@
 # Dev environment
 venv
 __pycache__
+.vscode
 # Private information
 credit_card.py
 cookies.json

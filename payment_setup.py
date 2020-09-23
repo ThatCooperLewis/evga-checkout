@@ -1,10 +1,14 @@
 import json
 import getpass
 import os
+import sys
 import pyzipper
 import warnings
+from utils import get_file_path
 
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
+
+zip_path = get_file_path('payment.zip')
 
 class PaymentInfo:
 
@@ -35,18 +39,11 @@ def save_cc():
     }
 
     pw = get_password_input('Enter new password for encrypted payment file: ')
-
-    with pyzipper.AESZipFile('payment.zip', 'w', compression=pyzipper.ZIP_LZMA) as zf:
+    with pyzipper.AESZipFile(zip_path, 'w', compression=pyzipper.ZIP_LZMA) as zf:
         zf.writestr('payment.json', json.dumps(payment_obj))
         zf.setpassword(pw)
 
     print('Payment information encrypted to payment.zip')
-    return payment_obj
-
-def load_to_dict():
-    with open('payment.json', 'r') as file:
-        payment_obj = json.load(file)
-        file.close()
     return payment_obj
 
 def get_password_input(prompt: str, confirm=True):
@@ -59,9 +56,9 @@ def get_password_input(prompt: str, confirm=True):
     return bytes(pw, 'utf-8')
 
 def get_payment_config():
-    if os.path.isfile('payment.zip'):
+    if os.path.isfile(zip_path):
         pw = get_password_input('Enter password to access payment information: ', False)
-        with pyzipper.AESZipFile('payment.zip') as zf:
+        with pyzipper.AESZipFile(zip_path) as zf:
             zf.setpassword(pw)
             payment_str = zf.read('payment.json')
             zf.close()
