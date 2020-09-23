@@ -8,7 +8,7 @@ I have tested this on MacOS Catalina, using an American Express card, shipping t
 
 - Rudimentary experience with the command line
 - A verified [EVGA account](https://secure.evga.com/us/login.asp) with separate billing/shipping addresses saved on profile (even if they're the same).
-  - Make sure to keep your ZIP code to 7 digits, not the full version. My bot anticipates the website correcting your address to the full ZIP. Pretend to go through checkout beforehand to confirm you get that additional prompt for address correction.
+  - Make sure to keep your ZIP code to 5 digits, not the full version. My bot anticipates the website correcting your address to the full ZIP. Pretend to go through checkout beforehand to confirm you get that additional prompt for address correction.
 - Product number of desired listing the [EVGA Store](https://www.evga.com/products/feature.aspx). This can be found after `?pn=` in the product page's URL. 
 - Python 3.7
 - Firefox Quantum 80.0.1 
