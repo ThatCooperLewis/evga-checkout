@@ -19,11 +19,12 @@ class EvgaBrowser:
         self.login()
 
     @classmethod
-    def headless_login(cls, cookies):
-        # Combines a few other existing functions, but runs it in headless mode without instantiating a class
+    def portable_login(cls, cookies):
+        # Combines a few other existing functions, but runs without instantiating a class
         # This is used before starting multiple threads, so they all don't try to login separately
+        # Returns true if logged in
         url = 'https://www.evga.com/products/feature.aspx'
-        browser = cls.setup_browser(True)
+        browser = cls.setup_browser(False)
         browser.get(url)
         for cookie in cookies:
             browser.add_cookie(cookie)
@@ -92,10 +93,13 @@ class EvgaBrowser:
     def website_is_down(self):
         # Look for link unique to "We're sorry, website down" page
         for _ in range(2):
-            try:
-                if self.browser.find_element_by_link_text('email our web team'): return True
-            except:
-                if debug: print('Login failed but error page is not detected...')
+            source = self.browser.page_source
+            # Look for specific terms in the various error pages displayed during server crashes
+            if 'error while requesting your page' in source or \
+                'internet connection problem to our website.' in source or \
+                'email our web team' in source: 
+                return True
+            if debug: print('Login failed but error page is not detected...')
         return False
 
     def load_product_page(self, product_number=None):

@@ -68,7 +68,7 @@ def loop(sku: str, instance_count: int, payment: PaymentInfo):
     print('If this is taking a long time, EVGA store is likely slugging/crashed.')
     print('You may have to check manually and run again.')
     cookies = get_login_cookies()
-    if not EvgaBrowser.headless_login(cookies):
+    if not EvgaBrowser.portable_login(cookies):
         print("There was an issue logging in. Please try again or refer to documentation.")
         sleep(15)
         exit()
