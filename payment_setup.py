@@ -42,6 +42,7 @@ def save_cc():
     with pyzipper.AESZipFile(zip_path, 'w', compression=pyzipper.ZIP_LZMA) as zf:
         zf.writestr('payment.json', json.dumps(payment_obj))
         zf.setpassword(pw)
+        zf.close()
 
     print('Payment information encrypted to payment.zip')
     return payment_obj
@@ -59,8 +60,7 @@ def get_payment_config():
     if os.path.isfile(zip_path):
         pw = get_password_input('Enter password to access payment information: ', False)
         with pyzipper.AESZipFile(zip_path) as zf:
-            zf.setpassword(pw)
-            payment_str = zf.read('payment.json')
+            payment_str = zf.read('payment.json', pwd=pw)
             zf.close()
         payment_obj = json.loads(payment_str)
         return payment_obj
