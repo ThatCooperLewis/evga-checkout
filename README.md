@@ -2,11 +2,9 @@
 
 An automation tool for product status/checkout through the EVGA Store. Supports multiple instances and permanent captcha-free authorization.
 
-## Setup
-
 I have tested this on MacOS Catalina, using an American Express card, shipping to United States. I cannot promise compatibility with anything else (other mac versions and card types should be fine, idk about international).
 
-### Requirements:
+## Requirements:
 
 - Rudimentary experience with the command line
 - A verified [EVGA account](https://secure.evga.com/us/login.asp) with separate billing/shipping addresses saved on profile (even if they're the same).
@@ -15,6 +13,25 @@ I have tested this on MacOS Catalina, using an American Express card, shipping t
 - Python 3.7
 - Firefox Quantum 80.0.1 
   - For other versions & troubleshooting, see [geckodriver](#Geckodriver/Firefox) section
+
+## Build
+
+        pip install -r requirements.txt
+        pyinstaller -F main.py
+
+After this, you'll need to move the appropriate geckodriver file from the root directory into `/dist`.
+
+- `dist/geckodriver.exe` for Windows
+- `dist/geckodriver` for MacOS
+
+Double-click on `dist/main` and the program should run. 
+
+1. Enter payment info
+2. Complete online login & captcha
+3. Enter product number
+4. Enter desired # of browser windows
+
+## Advanced CLI Setup
 
 ### Setup environment & user configuration
 
@@ -46,7 +63,7 @@ Two steps require your input:
 
 Open `runMacOS.command` to start bot. It will prompt you for the product number and # of windows (refer to Multiple Windows section for explanation of instances).
 
-## Advanced Usage (Linux/Debugging)
+## Advanced Usage
 
 Be sure to define environment using `source venv/bin/activate` before running `main.py` :
 
