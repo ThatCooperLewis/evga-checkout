@@ -5,6 +5,7 @@ from selenium.common.exceptions import WebDriverException
 from utils import get_file_path
 from time import sleep
 import platform
+import evga_config as cfg
 
 debug = False
 
@@ -31,7 +32,7 @@ class EvgaBrowser:
         browser.get(url)
         for _ in range(3):
             try:
-                if browser.find_element_by_id('pnlLoginBoxLogged'): 
+                if browser.find_element_by_id(cfg.login_status_true): 
                     browser.quit()
                     return True
             except:
@@ -72,7 +73,7 @@ class EvgaBrowser:
         # Must be currently on a loaded product page
         if retry == 0: return False
         try:
-            self.browser.find_element_by_id('LFrame_btnAddToCart').click()
+            self.browser.find_element_by_id(cfg.add_to_cart).click()
             print('Added to cart!')
             return True
         except:
@@ -84,7 +85,7 @@ class EvgaBrowser:
         # Look for logged-in UI element "Welcome, <username>" three times in case it doesn't immediately appear
         for _ in range(3):
             try:
-                if self.browser.find_element_by_id('pnlLoginBoxLogged'): return True
+                if self.browser.find_element_by_id(cfg.login_status_true): return True
             except:
                 if debug: print('no login detected')
                 sleep(2)
@@ -125,12 +126,12 @@ class EvgaBrowser:
 
     def click_continue(self):
         # Same "Continue" button is used in several places
-        return self.wait_and_click_id('ctl00_LFrame_btncontinue', duration=0.2)
+        return self.wait_and_click_id(cfg.continue_button_initial, duration=0.2)
 
     def product_out_of_stock(self):
         # Check for "OUT OF STOCK" prompt
         try:
-            if self.browser.find_element_by_id('LFrame_pnlNotify'): return True
+            if self.browser.find_element_by_id(cfg.out_of_stock): return True
         except:
             if debug: print('"Out of stock" not found')
         return False
@@ -139,7 +140,7 @@ class EvgaBrowser:
         # Try to find the "Add to Cart" button multiple times, in case it doesn't load immediately
         for _ in range(2):
             try:
-                if self.browser.find_element_by_id('LFrame_btnAddToCart'): return True
+                if self.browser.find_element_by_id(cfg.add_to_cart): return True
             except:
                 if debug: print('"Add to cart" not found')
         return False
@@ -147,14 +148,14 @@ class EvgaBrowser:
     def populate_credit_card(self):
         try:
             # Enter text fields
-            self.browser.find_element_by_id('ctl00_LFrame_txtNameOnCard').send_keys(self.cc.name)
-            self.browser.find_element_by_id('ctl00_LFrame_txtCardNumber').send_keys(self.cc.number)
-            self.browser.find_element_by_id('ctl00_LFrame_txtCvv').send_keys(self.cc.verification)
+            self.browser.find_element_by_id(cfg.name_on_card).send_keys(self.cc.name)
+            self.browser.find_element_by_id(cfg.card_number).send_keys(self.cc.number)
+            self.browser.find_element_by_id(cfg.card_cvv).send_keys(self.cc.verification)
             # Select dropdown expiration
-            Select(self.browser.find_element_by_id('ctl00_LFrame_ddlMonth')).select_by_value(self.cc.exp_month)
-            Select(self.browser.find_element_by_id('ctl00_LFrame_ddlYear')).select_by_value(self.cc.exp_year)
+            Select(self.browser.find_element_by_id(cfg.card_exp_month)).select_by_value(self.cc.exp_month)
+            Select(self.browser.find_element_by_id(cfg.card_exp_year)).select_by_value(self.cc.exp_year)
             # Click continue
-            self.browser.find_element_by_id('ctl00_LFrame_ImageButton2').click()
+            self.browser.find_element_by_id(cfg.continue_button_card).click()
         except Exception as error:
             if debug: print(error)
             input('WARNING: Credit card info not populated properly!! \nScript has been paused. Complete purchase manually. \nHit enter to close browser window.')
@@ -164,23 +165,23 @@ class EvgaBrowser:
             # First page of checkout
             self.browser.get('https://secure.evga.com/Cart/Checkout_Shipping.aspx')
             # Click confirm address
-            self.browser.find_elements_by_class_name('btnCheckoutContinue')[0].click(); sleep(1)
+            self.browser.find_elements_by_class_name(cfg.continue_button_checkout)[0].click(); sleep(1)
             # Click confirm address adjustment
-            self.browser.find_elements_by_class_name('btnCheckoutContinue')[2].click(); sleep(1)
+            self.browser.find_elements_by_class_name(cfg.continue_button_checkout)[2].click(); sleep(1)
             # Click agree to terms
-            self.wait_and_click_id('cbAgree')
+            self.wait_and_click_id(cfg.agree_to_terms)
             # Change -1 to 0 to select cheapest shipping method
-            self.browser.find_elements_by_xpath("//input[@name='rdoShipFee']")[-1].click()
+            self.browser.find_elements_by_xpath("//input[@name='%s']"%cfg.ship_speed_select)[-1].click()
             # Continue to payment
             self.click_continue()
             # Choose Credit Card
-            self.wait_and_click_id('rdoCreditCard')
+            self.wait_and_click_id(cfg.credit_selection)
             # Continue to card entry
             self.click_continue()
             # Enter CC info
             self.populate_credit_card()
             # CC verifcation appears, wait to resolve then click agree
-            self.wait_and_click_id('ctl00_LFrame_cbAgree')
+            self.wait_and_click_id(cfg.credit_card_verification)
             # COMPLETE PURCHASE
             self.click_continue()
         except Exception as error:
