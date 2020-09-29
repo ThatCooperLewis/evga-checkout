@@ -3,8 +3,9 @@ venv
 __pycache__
 .vscode
 # Private information
-credit_card.py
 cookies.json
+proxy_creds.json
+payment.zip
 # Debugging
 geckodriver.log
 status.txt
