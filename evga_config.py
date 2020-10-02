@@ -1,3 +1,8 @@
+# URLs
+product_page = "https://www.evga.com/products/product.aspx?pn={}"
+checkout_page = "https://secure.evga.com/Cart/Checkout_Shipping.aspx"
+store_homepage = "https://www.evga.com/products/feature.aspx"
+
 # Product Page
 login_status_true = 'pnlLoginBoxLogged'
 add_to_cart = 'LFrame_btnAddToCart'
@@ -14,7 +19,10 @@ card_exp_year = 'ctl00_LFrame_ddlYear'
 credit_selection = 'rdoCreditCard'
 agree_to_terms = 'cbAgree'
 credit_card_verification = 'ctl00_LFrame_cbAgree'
-ship_speed_select = 'rdoShipFee'
+ship_speed_select = "//input[@name='rdoShipFee']"
+
+# Google Captcha
+captcha_iframe = '//iframe[@width="304"]'
 
 # The first continue button, used prior to CC info
 continue_button_initial = 'ctl00_LFrame_btncontinue'

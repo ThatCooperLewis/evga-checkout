@@ -5,6 +5,7 @@ __pycache__
 # Private information
 cookies.json
 proxy_creds.json
+proxy_config.py
 payment.zip
 # Debugging
 geckodriver.log

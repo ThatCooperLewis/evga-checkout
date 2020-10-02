@@ -1,4 +1,8 @@
-import os, sys
+import os, sys, traceback
+import time
+import platform
+
+from playsound import playsound as play
 
 def get_current_dir():
     if getattr(sys, 'frozen', False):
@@ -9,6 +13,12 @@ def get_current_dir():
 def get_file_path(filename: str):
     file_path = os.path.join(get_current_dir(), filename)
     return file_path
+
+def get_geckodriver_path():
+    if platform.system() == 'Windows':
+        return get_file_path('geckodriver.exe')
+    else:
+        return get_file_path('geckodriver')
 
 def input_sku():
     sku = ''
@@ -25,3 +35,14 @@ def input_instance_count():
     except ValueError:
         print('[ERROR] Instance count must be a whole number (ex. 1, 12, 25)')
         return input_instance_count()
+
+def alert_sound():
+    play(get_file_path('sos.mp3'))
+
+def log_error():
+    with open(get_file_path('error_log.txt'), 'a+') as file:
+        file.write(time.ctime())
+        file.write(traceback.format_exc())
+        file.write('\n')
+        file.close()
+    print('Error message has been stored to error_log.txt. Please share with developer.')

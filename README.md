@@ -10,13 +10,19 @@ I have tested this on MacOS Catalina, using an American Express card, shipping t
 - A verified [EVGA account](https://secure.evga.com/us/login.asp) with separate billing/shipping addresses saved on profile (even if they're the same).
   - Make sure to keep your ZIP code to 5 digits, not the full version. My bot anticipates the website correcting your address to the full ZIP. Pretend to go through checkout beforehand to confirm you get that additional prompt for address correction.
 - Product number of desired listing the [EVGA Store](https://www.evga.com/products/feature.aspx). This can be found after `?pn=` in the product page's URL. 
-- Python 3.7
 - Firefox Quantum 80.0.1 
   - For other versions & troubleshooting, see [geckodriver](#Geckodriver/Firefox) section
 
 ## Build
 
+To manually build this app, you need to have Python 3.7+ installed. 
+
+Install requirements
+
         pip install -r requirements.txt
+
+Create executable
+
         pyinstaller -F main.py
 
 After this, you'll need to move the appropriate geckodriver file from the root directory into `/dist`.
