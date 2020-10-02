@@ -5,6 +5,7 @@ import queue
 import sys
 
 from evga_browser import BrowserStatus as Status
+from evga_browser import BrowserCrash
 from payment_setup import PaymentInfo
 from evga_browser import EvgaBrowser
 from proxy_queue import ProxyQueue
@@ -49,6 +50,12 @@ def threaded_loop(sku, payment, cookies, index, thread_output, thread_input, pro
                     if good_index != index: evga.close(True)
                     else: utils.alert_sound()
                     break
+    except BrowserCrash:
+        print(strings.medium_spacer)
+        print(strings.instance_lost_pt1.format(index))
+        print('BrowserCrash: either the proxy list ran out, or instance failed to login')
+        print(strings.instance_lost_pt2)
+        print(strings.medium_spacer)
     except KeyboardInterrupt:
         pass 
     except:
@@ -81,6 +88,8 @@ def loop(sku: str, instance_count: int, payment: PaymentInfo):
     print(strings.spacer)
     print(strings.login_confirmation)
     proxies = ProxyQueue()
+    if proxies.queue and instance_count > 1:
+        print('Found {} proxies available to use.'.format(proxies.size()))
     cookies = login.get_login_cookies()
     if not EvgaBrowser.portable_login(cookies):
         print("There was an issue logging in. Please try again or refer to documentation.")

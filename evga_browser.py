@@ -34,6 +34,7 @@ crash_indicators = [
     'Proxy',
     'proxy',
     'error occurred',
+    'ContentKeeper IP Authentication'
 ]
 
 class BrowserStatus(Enum):
@@ -98,8 +99,19 @@ class EvgaBrowser:
                     self.browser.quit()
                     return BrowserStatus.KILLED
                 self.login()
-                if not self.verify_login():
-                    return BrowserStatus.LOGOUT
+                retry_count = 0
+                while not self.verify_login():
+                    if retry_count > 4: return BrowserStatus.LOGOUT
+                    print('WARNING: Instance #{} was not able to login after changing proxies.')
+                    print('Attempting another proxy switch..')
+                    print('If this keeps happening, your cookies may have expired.')
+                    print(strings.spacer)
+                    if not self.restart():
+                        self.browser.quit()
+                        return BrowserStatus.KILLED
+                    self.login()
+                    # TODO: Check if website crash during logins here
+                    retry_count += 1
             if self.product_in_stock():
                 return BrowserStatus.IN_STOCK
 
@@ -109,10 +121,11 @@ class EvgaBrowser:
 
     def login_load_attempt(self, attempt=0):
         load_success = self.load_product_page()
-        if not load_success:
+        if not load_success or self.website_is_down():
             if attempt < 3:
                 attempt += 1
-                self.restart()
+                if not self.restart():
+                    raise BrowserCrash
                 self.login_load_attempt(attempt)
                 return
             else:
@@ -123,7 +136,7 @@ class EvgaBrowser:
         self.login_load_attempt()
         self.browser.set_window_position(self.index * 15, self.index * 15)
         self.inject_cookies()
-        if not self.load_product_page():
+        if not self.load_product_page() or self.website_is_down():
             self.login()
 
     def restart(self):

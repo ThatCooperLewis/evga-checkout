@@ -25,13 +25,11 @@ class ProxyQueue:
             return None
         # Filter for US proxies
         empty = True
-        with open('proxylist.txt', 'w+') as file:
-            for ip in res.text.split('\n'):
-                if 'US' in ip:
-                    ip = ip.replace('#US','').replace(' | FreeProxy','')
-                    file.write(ip + '\n')
-                    empty = False
-                    usa_proxies.put(ip)
+        for ip in res.text.split('\n'):
+            if 'US' in ip:
+                ip = ip.replace('#US','').replace(' | FreeProxy','')
+                empty = False
+                usa_proxies.put(ip)
         if empty:
             print('WARNING: No proxy servers found. Using local IP for all instances...')
             return None
