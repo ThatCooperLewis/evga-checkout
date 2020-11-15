@@ -1,5 +1,7 @@
 # EVGA Store Checkout Automator
 
+**NOTE: As of Oct 6th, 2020, this script is no longer effective in purchasing an Nvidia 30 Series card. EVGA has implemented a queue system to prevent automated purchases.**
+
 An automation tool for product status/checkout through the EVGA Store. Supports multiple instances and permanent captcha-free authorization.
 
 I have tested this on MacOS Catalina, using an American Express card, shipping to United States. I cannot promise compatibility with anything else (other mac versions and card types should be fine, idk about international).
