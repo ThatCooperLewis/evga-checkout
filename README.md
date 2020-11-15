@@ -64,9 +64,6 @@ Two steps require your input:
                     # Looks for CC input field on EVGA checkout page
                     # Populates those fields with cc variables
 
-
-    - If you'd like to overwrite the CC config file, please create/edit file `credit_card.py` follwing the `credit_card_example.py`
-
 ## Simple Usage
 
 Open `runMacOS.command` to start bot. It will prompt you for the product number and # of windows (refer to Multiple Windows section for explanation of instances).
